@@ -21,6 +21,16 @@ module.exports = {
       }),
     ],
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/, //.js인 파일에만 적용
+        loader: "babel-loader",
+        exclude: /node_modules/, //node_modules안의 파일들은 제외
+        //options 옵션을 적지 않으면 babel 설정 파일 읽어서 적용함.
+      },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       //index.html 템플릿 기반으로 빌드 결과물 추가해줌
