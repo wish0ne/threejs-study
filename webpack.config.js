@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -26,5 +27,14 @@ module.exports = {
       template: "./src/index.html",
     }),
     new CleanWebpackPlugin(),
+    // CopyWebpackPlugin: 그대로 복사할 파일들을 설정하는 플러그인
+    // 아래 patterns에 설정한 파일/폴더는 빌드 시 dist 폴더에 자동으로 생성됨
+    // patterns에 설정한 경로에 해당 파일이 없으면 에러가 발생
+    // 그대로 사용할 파일들이 없다면 CopyWebpackPlugin을 통째로 주석 처리 해주세요.
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     //{ from: "./src/main.css", to: "./main.css" }
+    //   ],
+    // }),
   ],
 };
