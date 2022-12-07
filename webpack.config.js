@@ -9,6 +9,9 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].min.js",
   },
+  devServer: {
+    liveReload: true, //default가 true이므로 설정안해줘도됨
+  },
   optimization: {
     minimizer: [
       new TerserPlugin({
