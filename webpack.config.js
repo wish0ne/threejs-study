@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -24,5 +25,6 @@ module.exports = {
       //index.html 템플릿 기반으로 빌드 결과물 추가해줌
       template: "./src/index.html",
     }),
+    new CleanWebpackPlugin(),
   ],
 };
