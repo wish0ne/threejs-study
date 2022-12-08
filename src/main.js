@@ -28,10 +28,29 @@ const scene = new THREE.Scene();
 //near — 카메라 절두체 근평면.
 //far — 카메라 절두체 원평면.
 
+//orthogonal camera (직교 카메라): 카메라와의 거리와 상관없이 크기가 유지
+//OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
+// left — 카메라 절두체 좌평면.
+// right — 카메라 절두체 우평면.
+// top — 카메라 절두체 상평면.
+// bottom — 카메라 절두체 하평면.
+// near — 카메라 절두체 근평면.
+// far — 카메라 절두체 원평면.
+
 //perspective camera 생성
-const camera = new THREE.PerspectiveCamera(
-  75, //시야각
-  window.innerWidth / window.innerHeight, //종횡비
+// const camera = new THREE.PerspectiveCamera(
+//   75, //시야각
+//   window.innerWidth / window.innerHeight, //종횡비
+//   0.1, //near
+//   1000 //far
+// );
+
+//orthogonal camera 생성
+const camera = new THREE.OrthographicCamera(
+  -(window.innerWidth / window.innerHeight), //left
+  window.innerWidth / window.innerHeight, //right
+  1, //top
+  -1, //bottom
   0.1, //near
   1000 //far
 );
@@ -41,6 +60,11 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.x = 1;
 camera.position.y = 2;
 camera.position.z = 5; //단위는 물체에 따라서 생각하면 편함
+camera.lookAt(0, 0, 0); //카메라가 (0,0,0)를 바라보게
+
+//orthogonal camera에서 줌인, 줌아웃 효과를 주려면 z좌표를 바꾸는게 아니라 카메라 줌을 직접 수정해야함
+camera.zoom = 0.5;
+camera.updateProjectionMatrix(); //카메라 변경된 값을 적용
 
 //scene에 camera 추가
 scene.add(camera);
