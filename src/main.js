@@ -9,7 +9,10 @@ import * as THREE from "three";
 //2) canvas 태그로 자리 잡아놓고 id로 삽입(추천)
 const canvas = document.querySelector("#three-canvas");
 //canvas 옵션 : renderer가 그려질 곳. dom element 지정. 없다면 새 canvas element가 생성됨
-const renderer = new THREE.WebGLRenderer({ canvas: canvas }); //canvas를 만들어놓은 canvas태그로 지정
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas, //canvas를 만들어놓은 canvas태그로 지정
+  antialias: true, //계단현상 방지
+});
 renderer.setSize(window.innerWidth, window.innerHeight); //renderer 크기 지정
 
 //scene 생성
@@ -35,7 +38,22 @@ const camera = new THREE.PerspectiveCamera(
 
 //camera의 default 위치는 (0,0,0)
 //camera 위치 설정 (약간 뒤로 빼줘야 물체가 잘 보임)
+camera.position.x = 1;
+camera.position.y = 2;
 camera.position.z = 5; //단위는 물체에 따라서 생각하면 편함
 
 //scene에 camera 추가
 scene.add(camera);
+
+//mesh(geometry + material) 생성
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({
+  //color:'0xff0000'
+  //color:'#ff0000;'
+  color: "red",
+});
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+
+//mesh가 보이려면 renderer로 그려줘야함
+renderer.render(scene, camera);
