@@ -1,2 +1,3 @@
 //entry 파일
-document.querySelector("#root").innerHTML = "Hello World";
+import * as THREE from "three";
+console.log(THREE);
