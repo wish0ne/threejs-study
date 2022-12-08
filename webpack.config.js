@@ -29,6 +29,11 @@ module.exports = {
         exclude: /node_modules/, //node_modules안의 파일들은 제외
         //options 옵션을 적지 않으면 babel 설정 파일 읽어서 적용함.
       },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
+      },
     ],
   },
   plugins: [
