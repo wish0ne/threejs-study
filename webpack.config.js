@@ -4,8 +4,13 @@ const TerserPlugin = require("terser-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
+//node.js 환경변수
+//NODE_ENV는 script에 따라 반영됨
+//웹팩 mode : production(default) / development / none
+const webpackMode = process.env.NODE_ENV || "development";
+
 module.exports = {
-  mode: "development",
+  mode: webpackMode,
   entry: "./src/main.js",
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -15,11 +20,14 @@ module.exports = {
     liveReload: true, //default가 true이므로 설정안해줘도됨
   },
   optimization: {
-    minimizer: [
-      new TerserPlugin({
-        extractComments: false, //주석을 별도의 파일로 분리할지 여부
-      }),
-    ],
+    minimizer:
+      webpackMode === "production"
+        ? [
+            new TerserPlugin({
+              extractComments: false, //주석을 별도의 파일로 분리할지 여부
+            }),
+          ]
+        : [],
   },
   module: {
     rules: [
