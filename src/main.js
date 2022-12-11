@@ -1,3 +1,3 @@
-import fpsCheck from "./fpsCheck";
+import guiControl from "./guiControl";
 
-fpsCheck();
+guiControl();
