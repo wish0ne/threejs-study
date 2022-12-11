@@ -1,3 +1,3 @@
-import axesGridHelper from "./axesGridHelper";
+import fpsCheck from "./fpsCheck";
 
-axesGridHelper();
+fpsCheck();
