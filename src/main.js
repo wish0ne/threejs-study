@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+//position 이동
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -43,6 +44,15 @@ export default function main() {
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
+
+  //position 이동
+
+  //mesh.position.y = 2;
+  mesh.position.set(0, 2, 0);
+  //position은 Vector3(3차원 공간상에서 점의 위치를 나타내는 객체)
+  console.log(mesh.position.length()); //원점으로부터의 거리
+  console.log(mesh.position.distanceTo(new THREE.Vector3(0, 1, 0))); //특정 Vector3로부터의 거리
+  console.log(mesh.position.distanceTo(camera.position));
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
