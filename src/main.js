@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-//scale (크기 조정)
+//rotation 회전
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -22,8 +22,9 @@ export default function main() {
   );
 
   //camera 위치 설정
-  camera.position.y = 1;
-  camera.position.z = 5;
+  camera.position.x = 1;
+  camera.position.y = 2;
+  camera.position.z = 7;
 
   //scene에 camera 추가
   scene.add(camera);
@@ -45,10 +46,19 @@ export default function main() {
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
-  //scale
-  //mesh.scale.x = 2; //x축 방향으로 2배
-  //mesh.scale.y = 0.5;
-  mesh.scale.set(2, 0.5, 1);
+  //rotation
+  //mesh.rotation.y = 1; //기본 단위는 radian
+  //mesh.rotation.y = THREE.MathUtils.degToRad(45); //각도로 회전시키기
+  //mesh.rotation.y = Math.PI / 4; //45도 회전
+
+  //여러번 회전 시 주의사항
+  //mesh.rotation.y = THREE.MathUtils.degToRad(45);
+  //mesh.rotation.x = THREE.MathUtils.degToRad(45); //축은 회전하지 않았으므로 y축으로 45도 회전한 축이 아니라 x축을 기준으로 45도 회전하게됨
+
+  //reorder()를 이용하면 어떤 축부터 회전시킬지 정할 수 있음
+  mesh.rotation.reorder("YXZ");
+  mesh.rotation.y = THREE.MathUtils.degToRad(45);
+  mesh.rotation.x = THREE.MathUtils.degToRad(45); //축은 회전하지 않았으므로 y축으로 45도 회전한 축이 아니라
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
@@ -58,6 +68,7 @@ export default function main() {
   const clock = new THREE.Clock();
   function draw() {
     const delta = clock.getDelta();
+    //mesh.rotation.y += delta;
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
