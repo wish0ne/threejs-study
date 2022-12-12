@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-//rotation 회전
+//그룹 만들기 (Scene Graph)
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -38,27 +38,37 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
+  //scene graph
+  //그룹을 transform시키면 그룹안의 mesh들이 같이 변화
+  //1번그룹(태양) 안에 2번그룹(지구) 안에 3번그룹(달)
+  //1번그룹이 자전하면 2,3번 자동 공전, 2번그룹이 자전하면 3번 자동 공전, 3번그룹이 자전하면 혼자 자전
+
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
+    color: "hotpink",
   });
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
 
-  //rotation
-  //mesh.rotation.y = 1; //기본 단위는 radian
-  //mesh.rotation.y = THREE.MathUtils.degToRad(45); //각도로 회전시키기
-  //mesh.rotation.y = Math.PI / 4; //45도 회전
+  const group1 = new THREE.Group();
+  const box1 = new THREE.Mesh(geometry, material); //태양
 
-  //여러번 회전 시 주의사항
-  //mesh.rotation.y = THREE.MathUtils.degToRad(45);
-  //mesh.rotation.x = THREE.MathUtils.degToRad(45); //축은 회전하지 않았으므로 y축으로 45도 회전한 축이 아니라 x축을 기준으로 45도 회전하게됨
+  const group2 = new THREE.Group();
+  //const box2 = new THREE.Mesh(geometry, material); //지구
+  const box2 = box1.clone();
+  box2.scale.set(0.3, 0.3, 0.3);
+  group2.position.x = 2;
 
-  //reorder()를 이용하면 어떤 축부터 회전시킬지 정할 수 있음
-  mesh.rotation.reorder("YXZ");
-  mesh.rotation.y = THREE.MathUtils.degToRad(45);
-  mesh.rotation.x = THREE.MathUtils.degToRad(45); //축은 회전하지 않았으므로 y축으로 45도 회전한 축이 아니라
+  //Group 대신 Object3D() 사용가능
+  const group3 = new THREE.Object3D();
+  const box3 = box2.clone();
+  box3.scale.set(0.15, 0.15, 0.15);
+  group3.position.x = 0.5;
+
+  group3.add(box3);
+  group2.add(box2, group3);
+  group1.add(box1, group2);
+
+  scene.add(group1);
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
@@ -68,7 +78,10 @@ export default function main() {
   const clock = new THREE.Clock();
   function draw() {
     const delta = clock.getDelta();
-    //mesh.rotation.y += delta;
+
+    group1.rotation.y += delta;
+    group2.rotation.y += delta;
+    group3.rotation.y += delta;
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
