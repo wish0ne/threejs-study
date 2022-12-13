@@ -1,5 +1,8 @@
 import * as THREE from "three";
+import { DoubleSide } from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+//Geometry 기본
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -36,10 +39,16 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
+  //camera control 추가
+  const controls = new OrbitControls(camera, renderer.domElement);
+
   //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const geometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16); //segment : mesh가 여러도형으로 쪼개짐
+  //segement를 여러개로 쪼갤수록 vertex가 추가되는것 -> vertex들을 조절하면 geometry 자체가 바뀜
   const material = new THREE.MeshStandardMaterial({
     color: "seagreen",
+    side: DoubleSide, //threejs 기본은 안쪽은 안보임. 설정하면 mesh 안쪽에 들어가도 볼수있음
+    wireframe: true,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
