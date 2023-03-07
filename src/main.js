@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+// OrbitControls
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -36,13 +39,36 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
+  //Controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; //컨트롤 느낌을 부드럽게. draw 함수에서 update() 메서드 실행 필요
+  // controls.enableZoom = false; //휠로 줌인/줌아웃 불가능
+  controls.maxDistance = 10; // 최대 10까지만 멀어질 수 있음
+  controls.minDistance = 5;
+  controls.minPolarAngle = Math.PI / 4; //수직방향으로 회전하는 각도 제한
+  controls.maxPolarAngle = THREE.MathUtils.degToRad(135);
+  controls.target.set(2, 2, 2); //회전 중심점의 위치 설정
+  controls.autoRotate = true; //자동 회전
+  controls.autoRotateSpeed = 10; //자동 회전 속도
+
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  let mesh;
+  let material;
+  for (let i = 0; i < 20; i++) {
+    material = new THREE.MeshStandardMaterial({
+      color: `rgb(
+        ${50 + Math.floor(Math.random() * 205)}, 
+        ${50 + Math.floor(Math.random() * 205)}, 
+        ${50 + Math.floor(Math.random() * 205)}
+      )`,
+    });
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = (Math.random() - 0.5) * 5;
+    mesh.position.y = (Math.random() - 0.5) * 5;
+    mesh.position.z = (Math.random() - 0.5) * 5;
+    scene.add(mesh);
+  }
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
@@ -52,6 +78,8 @@ export default function main() {
   const clock = new THREE.Clock();
   function draw() {
     const delta = clock.getDelta();
+
+    controls.update();
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
