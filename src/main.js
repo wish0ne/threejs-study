@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { FlyControls } from "three/examples/jsm/controls/FlyControls";
 
-// TrackballControls
+// FlyControls
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -40,11 +40,15 @@ export default function main() {
   scene.add(directionalLight);
 
   //Controls
-  const controls = new TrackballControls(camera, renderer.domElement); //controls.update() 호출하지 않으면 동작안함
-  // enableDamping이 기본 적용
-  controls.maxDistance = 20;
-  controls.minDistance = 5;
-  controls.target.set(3, 3, 3);
+  const controls = new FlyControls(camera, renderer.domElement); //update시 delta값 파라미터로 필요
+  // awsd로 비행하듯이 키보드로 이동 가능
+  // 마우스 왼쪽 클릭으로 앞, 오른쪽 클릭으로 뒤로 이동
+  // r : 위로, f : 아래로
+
+  // 마우스 위치에 따라 자동으로 회전
+  controls.rollSpeed = 0.1; // 회전 속도
+  controls.movementSpeed = 3; // 이동 속도
+  controls.dragToLook = true; // 마우스에 반응하지 않음(마우스에 따라 회전하지 않음)
 
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -74,7 +78,7 @@ export default function main() {
   function draw() {
     const delta = clock.getDelta();
 
-    controls.update();
+    controls.update(delta);
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
