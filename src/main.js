@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { FlyControls } from "three/examples/jsm/controls/FlyControls";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 
-// FlyControls
+// FirstPersonControls
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -40,15 +40,12 @@ export default function main() {
   scene.add(directionalLight);
 
   //Controls
-  const controls = new FlyControls(camera, renderer.domElement); //update시 delta값 파라미터로 필요
-  // awsd로 비행하듯이 키보드로 이동 가능
-  // 마우스 왼쪽 클릭으로 앞, 오른쪽 클릭으로 뒤로 이동
-  // r : 위로, f : 아래로
-
-  // 마우스 위치에 따라 자동으로 회전
-  controls.rollSpeed = 0.1; // 회전 속도
-  controls.movementSpeed = 3; // 이동 속도
-  controls.dragToLook = true; // 마우스에 반응하지 않음(마우스에 따라 회전하지 않음)
+  const controls = new FirstPersonControls(camera, renderer.domElement);
+  // FlyControls의 대체 구현. 몇가지 기능 추가 수정한 것
+  controls.movementSpeed = 10;
+  // controls.activeLook = false; // 주변을 둘러볼 수 없음 (고정)
+  controls.lookSpeed = 0.1; //rollSpeed
+  // controls.autoForward = true; //저절로 앞으로 나아감
 
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
