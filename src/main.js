@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+// MeshBasicMaterial
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -36,11 +39,18 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
+  //controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({
+
+  const material = new THREE.MeshBasicMaterial({
     color: "seagreen",
   });
+  // 입체감 없음. 빛, 그림자 영향 받지 않으므로 Light 필요없음
+  // 대신 성능 가장 빠름
+
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
