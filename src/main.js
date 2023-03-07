@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 
-// FirstPersonControls
+// PointerLockControls
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -40,12 +40,19 @@ export default function main() {
   scene.add(directionalLight);
 
   //Controls
-  const controls = new FirstPersonControls(camera, renderer.domElement);
-  // FlyControls의 대체 구현. 몇가지 기능 추가 수정한 것
-  controls.movementSpeed = 10;
-  // controls.activeLook = false; // 주변을 둘러볼 수 없음 (고정)
-  controls.lookSpeed = 0.1; //rollSpeed
-  // controls.autoForward = true; //저절로 앞으로 나아감
+  const controls = new PointerLockControls(camera, renderer.domElement); //update() 없음
+  //JavaScript의 Pointer Lock API 이용
+
+  //실행시키기 위해선 user gesture 필요
+  controls.domElement.addEventListener("click", () => {
+    controls.lock();
+  });
+  controls.addEventListener("lock", () => {
+    console.log("lock");
+  });
+  controls.addEventListener("unlock", () => {
+    console.log("unlock");
+  });
 
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -74,8 +81,6 @@ export default function main() {
   const clock = new THREE.Clock();
   function draw() {
     const delta = clock.getDelta();
-
-    controls.update(delta);
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
