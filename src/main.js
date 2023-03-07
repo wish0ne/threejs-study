@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import { DragControls } from "three/examples/jsm/controls/DragControls";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+import { KeyController } from "./KeyController";
 
-// DragControls
+// PointerLockControls + 키보드 컨트롤 (마인크래프트 스타일 컨트롤)
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -62,11 +63,34 @@ export default function main() {
   }
 
   //Controls
-  const controls = new DragControls(meshes, camera, renderer.domElement);
-  // 어떤 mesh를 드래그했는지 잡아낼 수 있음
-  controls.addEventListener("dragstart", (e) => {
-    console.log(e);
+  const controls = new PointerLockControls(camera, renderer.domElement);
+  controls.domElement.addEventListener("click", () => {
+    controls.lock();
   });
+  controls.addEventListener("lock", () => {
+    console.log("lock");
+  });
+  controls.addEventListener("unlock", () => {
+    console.log("unlock");
+  });
+
+  // 키보드 컨트롤
+  const keyController = new KeyController();
+
+  function walk() {
+    if (keyController.keys["KeyW"] || keyController.keys["ArrowUp"]) {
+      controls.moveForward(0.02);
+    }
+    if (keyController.keys["KeyS"] || keyController.keys["ArrowDown"]) {
+      controls.moveForward(-0.02);
+    }
+    if (keyController.keys["KeyA"] || keyController.keys["ArrowLeft"]) {
+      controls.moveRight(-0.02);
+    }
+    if (keyController.keys["KeyD"] || keyController.keys["ArrowRight"]) {
+      controls.moveRight(0.02);
+    }
+  }
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
@@ -76,6 +100,8 @@ export default function main() {
   const clock = new THREE.Clock();
   function draw() {
     const delta = clock.getDelta();
+
+    walk(); // 어떤 키를 눌렀는지 체크
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
