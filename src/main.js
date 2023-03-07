@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+import { DragControls } from "three/examples/jsm/controls/DragControls";
 
-// PointerLockControls
+// DragControls
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -39,23 +39,9 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
-  //Controls
-  const controls = new PointerLockControls(camera, renderer.domElement); //update() 없음
-  //JavaScript의 Pointer Lock API 이용
-
-  //실행시키기 위해선 user gesture 필요
-  controls.domElement.addEventListener("click", () => {
-    controls.lock();
-  });
-  controls.addEventListener("lock", () => {
-    console.log("lock");
-  });
-  controls.addEventListener("unlock", () => {
-    console.log("unlock");
-  });
-
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const meshes = [];
   let mesh;
   let material;
   for (let i = 0; i < 20; i++) {
@@ -70,8 +56,17 @@ export default function main() {
     mesh.position.x = (Math.random() - 0.5) * 5;
     mesh.position.y = (Math.random() - 0.5) * 5;
     mesh.position.z = (Math.random() - 0.5) * 5;
+    mesh.name = `box-${i}`;
     scene.add(mesh);
+    meshes.push(mesh);
   }
+
+  //Controls
+  const controls = new DragControls(meshes, camera, renderer.domElement);
+  // 어떤 mesh를 드래그했는지 잡아낼 수 있음
+  controls.addEventListener("dragstart", (e) => {
+    console.log(e);
+  });
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
