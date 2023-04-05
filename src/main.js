@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshBasicMaterial
+// MeshLambertMaterial, MeshPhongMaterial
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -35,24 +35,30 @@ export default function main() {
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1); //빛 색상, 강도
-  directionalLight.position.x = 1;
-  directionalLight.position.z = 2;
+  directionalLight.position.set(1, 0, 2);
   scene.add(directionalLight);
 
   //controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const geometry = new THREE.SphereGeometry(1, 16, 16);
 
-  const material = new THREE.MeshBasicMaterial({
+  //MeshBasicMaterial : 하이라이트, 반사광 없는 재질
+  const material1 = new THREE.MeshBasicMaterial({
     color: "seagreen",
   });
-  // 입체감 없음. 빛, 그림자 영향 받지 않으므로 Light 필요없음
-  // 대신 성능 가장 빠름
+  //MeshPhongMaterial : 하이라이트, 반사광 표현 가능 재질
+  const material2 = new THREE.MeshPhongMaterial({
+    color: "seagreen",
+    shininess: 1000,
+  });
 
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  const mesh1 = new THREE.Mesh(geometry, material1);
+  const mesh2 = new THREE.Mesh(geometry, material2);
+  mesh1.position.x = -1.5;
+  mesh2.position.x = 1.5;
+  scene.add(mesh1, mesh2);
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
