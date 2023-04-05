@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshPhongMaterial, MeshStandardMaterial
+// 각지게 표현하기
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -47,11 +47,13 @@ export default function main() {
   const material1 = new THREE.MeshPhongMaterial({
     color: "seagreen",
     shininess: 1000,
+    flatShading: true,
   });
   const material2 = new THREE.MeshStandardMaterial({
     color: "seagreen",
     roughness: 0.2,
     metalness: 0.3,
+    flatShading: true,
   });
 
   const mesh1 = new THREE.Mesh(geometry, material1);
