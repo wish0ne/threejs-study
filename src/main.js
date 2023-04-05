@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshLambertMaterial, MeshPhongMaterial
+// MeshPhongMaterial, MeshStandardMaterial
 
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
@@ -44,14 +44,14 @@ export default function main() {
   //mesh(geometry + material) 생성
   const geometry = new THREE.SphereGeometry(1, 16, 16);
 
-  //MeshBasicMaterial : 하이라이트, 반사광 없는 재질
-  const material1 = new THREE.MeshBasicMaterial({
-    color: "seagreen",
-  });
-  //MeshPhongMaterial : 하이라이트, 반사광 표현 가능 재질
-  const material2 = new THREE.MeshPhongMaterial({
+  const material1 = new THREE.MeshPhongMaterial({
     color: "seagreen",
     shininess: 1000,
+  });
+  const material2 = new THREE.MeshStandardMaterial({
+    color: "seagreen",
+    roughness: 0.2,
+    metalness: 0.3,
   });
 
   const mesh1 = new THREE.Mesh(geometry, material1);
