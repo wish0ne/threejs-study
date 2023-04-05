@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// 각지게 표현하기
-
+// side
+// 3D object = vertext + edge + face(side)
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -35,32 +35,25 @@ export default function main() {
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1); //빛 색상, 강도
-  directionalLight.position.set(1, 0, 2);
+  directionalLight.position.set(1, 1, 2);
   scene.add(directionalLight);
 
   //controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.SphereGeometry(1, 16, 16);
+  const geometry = new THREE.BoxGeometry(2, 2, 2);
 
-  const material1 = new THREE.MeshPhongMaterial({
-    color: "seagreen",
-    shininess: 1000,
-    flatShading: true,
-  });
-  const material2 = new THREE.MeshStandardMaterial({
-    color: "seagreen",
+  const material = new THREE.MeshStandardMaterial({
+    color: "orangered",
     roughness: 0.2,
     metalness: 0.3,
-    flatShading: true,
+    //side: THREE.FrontSide,
+    //side: THREE.BackSide,
+    side: THREE.DoubleSide,
   });
-
-  const mesh1 = new THREE.Mesh(geometry, material1);
-  const mesh2 = new THREE.Mesh(geometry, material2);
-  mesh1.position.x = -1.5;
-  mesh2.position.x = 1.5;
-  scene.add(mesh1, mesh2);
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 
   //AxesHelper
   const axesHelper = new THREE.AxesHelper(5);
