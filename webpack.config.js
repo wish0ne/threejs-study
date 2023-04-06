@@ -55,7 +55,10 @@ module.exports = {
     // patterns에 설정한 경로에 해당 파일이 없으면 에러가 발생
     // 그대로 사용할 파일들이 없다면 CopyWebpackPlugin을 통째로 주석 처리 해주세요.
     new CopyWebpackPlugin({
-      patterns: [{ from: "./src/main.css", to: "./main.css" }],
+      patterns: [
+        { from: "./src/main.css", to: "./main.css" },
+        { from: "./src/textures", to: "./textures" },
+      ],
     }),
   ],
 };

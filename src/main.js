@@ -1,9 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// side
-// 3D object = vertext + edge + face(side)
+// 텍스쳐 이미지 로드
 export default function main() {
+  //텍스쳐 이미지 로드
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_basecolor.jpg",
+    () => console.log("로드 완료"),
+    () => console.log("로드 중"),
+    () => console.log("로드 에러")
+  );
+
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas, //canvas를 만들어놓은 canvas태그로 지정
@@ -45,12 +53,7 @@ export default function main() {
   const geometry = new THREE.BoxGeometry(2, 2, 2);
 
   const material = new THREE.MeshStandardMaterial({
-    color: "orangered",
-    roughness: 0.2,
-    metalness: 0.3,
-    //side: THREE.FrontSide,
-    //side: THREE.BackSide,
-    side: THREE.DoubleSide,
+    map: texture,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
