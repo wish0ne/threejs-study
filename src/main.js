@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshToonMaterial(만화 느낌)
+// MeshNormalMaterial
 export default function main() {
   //텍스쳐 이미지 로드
   const loadingManager = new THREE.LoadingManager();
@@ -59,11 +59,8 @@ export default function main() {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.ConeGeometry(1, 2, 128);
-  const material = new THREE.MeshToonMaterial({
-    color: "plum",
-    gradientMap: gradientTexture,
-  });
+  const geometry = new THREE.BoxGeometry(2, 2, 2);
+  const material = new THREE.MeshNormalMaterial({});
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
