@@ -1,15 +1,37 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// 텍스쳐 이미지 로드
+// 로딩 매니저 (여러개의 텍스쳐 이미지 로드하기)
 export default function main() {
   //텍스쳐 이미지 로드
-  const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_basecolor.jpg",
-    () => console.log("로드 완료"),
-    () => console.log("로드 중"),
-    () => console.log("로드 에러")
+  const loadingManager = new THREE.LoadingManager();
+  loadingManager.onStart = () => {
+    console.log("로드 시작");
+  };
+  loadingManager.onProgress = (img) => {
+    console.log(img + " 로드");
+  };
+  loadingManager.onLoad = () => {
+    console.log("로드 완료");
+  };
+  loadingManager.onError = () => {
+    console.log("에러");
+  };
+  const textureLoader = new THREE.TextureLoader(loadingManager);
+  const baseColorTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_basecolor.jpg"
+  );
+  const heightTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_height.png"
+  );
+  const ambientOcclusionTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_ambientOcclusion.jpg"
+  );
+  const normalTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_normal.jpg"
+  );
+  const roughnessTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_roughness.jpg"
   );
 
   const canvas = document.querySelector("#three-canvas");
@@ -53,7 +75,7 @@ export default function main() {
   const geometry = new THREE.BoxGeometry(2, 2, 2);
 
   const material = new THREE.MeshStandardMaterial({
-    map: texture,
+    map: ambientOcclusionTex,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
