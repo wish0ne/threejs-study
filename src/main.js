@@ -1,11 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// EnvironmentMap
+// Skybox와 EnvMap
 export default function main() {
   //텍스쳐 이미지 로드
   const cubeTextureLoader = new THREE.CubeTextureLoader();
-  const envTex = cubeTextureLoader.setPath("/textures/tooncubemap/").load([
+  const cubeTexture = cubeTextureLoader.setPath("/textures/tooncubemap/").load([
     // + - 순서
     "px.png",
     "nx.png",
@@ -25,6 +25,7 @@ export default function main() {
 
   //scene 생성
   const scene = new THREE.Scene();
+  scene.background = cubeTexture;
 
   //perspective camera 생성
   const camera = new THREE.PerspectiveCamera(
@@ -53,11 +54,9 @@ export default function main() {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(3, 3, 3);
-  const material = new THREE.MeshStandardMaterial({
-    envMap: envTex,
-    metalness: 2,
-    roughness: 0.1,
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial({
+    envMap: cubeTexture,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
