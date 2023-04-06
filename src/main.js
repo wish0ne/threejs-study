@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// 로딩 매니저 (여러개의 텍스쳐 이미지 로드하기)
+// 텍스쳐 이미지 변환
 export default function main() {
   //텍스쳐 이미지 로드
   const loadingManager = new THREE.LoadingManager();
@@ -18,21 +18,24 @@ export default function main() {
     console.log("에러");
   };
   const textureLoader = new THREE.TextureLoader(loadingManager);
-  const baseColorTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_basecolor.jpg"
+  const texture = textureLoader.load(
+    "/textures/skull/Ground Skull_basecolor.jpg"
   );
-  const heightTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_height.png"
-  );
-  const ambientOcclusionTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_ambientOcclusion.jpg"
-  );
-  const normalTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_normal.jpg"
-  );
-  const roughnessTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_roughness.jpg"
-  );
+
+  //텍스쳐 변환
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+
+  // texture.offset.x = 0.3;
+  // texture.offset.y = 0.3;
+
+  // texture.repeat.x = 2;
+  // texture.repeat.y = 2;
+
+  //texture.rotation = Math.PI * 0.25;
+  texture.rotation = THREE.MathUtils.degToRad(60);
+  texture.center.x = 0.5;
+  texture.center.y = 0.5;
 
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -75,7 +78,7 @@ export default function main() {
   const geometry = new THREE.BoxGeometry(2, 2, 2);
 
   const material = new THREE.MeshStandardMaterial({
-    map: ambientOcclusionTex,
+    map: texture,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
