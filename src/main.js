@@ -1,20 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// Skybox와 EnvMap
+// CanvasTexture
 export default function main() {
-  //텍스쳐 이미지 로드
-  const cubeTextureLoader = new THREE.CubeTextureLoader();
-  const cubeTexture = cubeTextureLoader.setPath("/textures/tooncubemap/").load([
-    // + - 순서
-    "px.png",
-    "nx.png",
-    "py.png",
-    "ny.png",
-    "pz.png",
-    "nz.png",
-  ]);
-
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas, //canvas를 만들어놓은 canvas태그로 지정
@@ -25,7 +13,6 @@ export default function main() {
 
   //scene 생성
   const scene = new THREE.Scene();
-  scene.background = cubeTexture;
 
   //perspective camera 생성
   const camera = new THREE.PerspectiveCamera(
@@ -53,10 +40,17 @@ export default function main() {
   //controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
+  //CanvasTexture
+  const texCanvas = document.createElement("canvas");
+  const texContext = texCanvas.getContext("2d");
+  texCanvas.width = 500;
+  texCanvas.height = 500;
+  const canvasTexture = new THREE.CanvasTexture(texCanvas);
+
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshBasicMaterial({
-    envMap: cubeTexture,
+    map: canvasTexture,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
@@ -68,7 +62,16 @@ export default function main() {
   //animation
   const clock = new THREE.Clock();
   function draw() {
-    const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
+
+    material.map.needsUpdate = true;
+
+    texContext.fillStyle = "green";
+    texContext.fillRect(0, 0, 500, 500);
+    texContext.fillStyle = "white";
+    texContext.fillRect(time * 50, 100, 50, 50);
+    texContext.font = "bold 50px sans-serif";
+    texContext.fillText("안녕", 200, 200);
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
