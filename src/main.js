@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshNormalMaterial
+// MeshStandardMaterial에 효과 더하기
 export default function main() {
   //텍스쳐 이미지 로드
   const loadingManager = new THREE.LoadingManager();
@@ -18,8 +18,21 @@ export default function main() {
     console.log("에러");
   };
   const textureLoader = new THREE.TextureLoader(loadingManager);
-  const gradientTexture = textureLoader.load("/textures/gradient.png");
-  gradientTexture.magFilter = THREE.NearestFilter;
+  const baseColorTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_basecolor.jpg"
+  );
+  const heightTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_height.png"
+  );
+  const ambientOcclusionTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_ambientOcclusion.jpg"
+  );
+  const normalTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_normal.jpg"
+  );
+  const roughnessTex = textureLoader.load(
+    "/textures/brick/Brick_Wall_019_roughness.jpg"
+  );
 
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -59,8 +72,17 @@ export default function main() {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(2, 2, 2);
-  const material = new THREE.MeshNormalMaterial({});
+  const geometry = new THREE.BoxGeometry(3, 3, 3);
+  const material = new THREE.MeshStandardMaterial({
+    map: baseColorTex,
+    roughness: 0.3,
+    metalness: 0.3,
+    normalMap: normalTex,
+    roughnessMap: roughnessTex,
+    aoMap: ambientOcclusionTex,
+    aoMapIntensity: 5,
+    //color: "green",
+  });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
