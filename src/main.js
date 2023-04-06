@@ -1,38 +1,19 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// MeshStandardMaterial에 효과 더하기
+// EnvironmentMap
 export default function main() {
   //텍스쳐 이미지 로드
-  const loadingManager = new THREE.LoadingManager();
-  loadingManager.onStart = () => {
-    console.log("로드 시작");
-  };
-  loadingManager.onProgress = (img) => {
-    console.log(img + " 로드");
-  };
-  loadingManager.onLoad = () => {
-    console.log("로드 완료");
-  };
-  loadingManager.onError = () => {
-    console.log("에러");
-  };
-  const textureLoader = new THREE.TextureLoader(loadingManager);
-  const baseColorTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_basecolor.jpg"
-  );
-  const heightTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_height.png"
-  );
-  const ambientOcclusionTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_ambientOcclusion.jpg"
-  );
-  const normalTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_normal.jpg"
-  );
-  const roughnessTex = textureLoader.load(
-    "/textures/brick/Brick_Wall_019_roughness.jpg"
-  );
+  const cubeTextureLoader = new THREE.CubeTextureLoader();
+  const envTex = cubeTextureLoader.setPath("/textures/tooncubemap/").load([
+    // + - 순서
+    "px.png",
+    "nx.png",
+    "py.png",
+    "ny.png",
+    "pz.png",
+    "nz.png",
+  ]);
 
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -74,14 +55,9 @@ export default function main() {
   //mesh(geometry + material) 생성
   const geometry = new THREE.BoxGeometry(3, 3, 3);
   const material = new THREE.MeshStandardMaterial({
-    map: baseColorTex,
-    roughness: 0.3,
-    metalness: 0.3,
-    normalMap: normalTex,
-    roughnessMap: roughnessTex,
-    aoMap: ambientOcclusionTex,
-    aoMapIntensity: 5,
-    //color: "green",
+    envMap: envTex,
+    metalness: 2,
+    roughness: 0.1,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
