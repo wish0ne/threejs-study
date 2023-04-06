@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// 여러가지 텍스쳐가 적용된 큐브
+// MeshToonMaterial(만화 느낌)
 export default function main() {
   //텍스쳐 이미지 로드
   const loadingManager = new THREE.LoadingManager();
@@ -18,41 +18,8 @@ export default function main() {
     console.log("에러");
   };
   const textureLoader = new THREE.TextureLoader(loadingManager);
-  const rightTexture = textureLoader.load("/textures/mcstyle/right.png");
-  const backTexture = textureLoader.load("/textures/mcstyle/back.png");
-  const bottomTexture = textureLoader.load("/textures/mcstyle/bottom.png");
-  const frontTexture = textureLoader.load("/textures/mcstyle/front.png");
-  const topTextrue = textureLoader.load("/textures/mcstyle/top.png");
-  const leftTexture = textureLoader.load("/textures/mcstyle/left.png");
-
-  const materials = [
-    new THREE.MeshBasicMaterial({
-      map: rightTexture,
-    }),
-    new THREE.MeshBasicMaterial({
-      map: leftTexture,
-    }),
-    new THREE.MeshBasicMaterial({
-      map: topTextrue,
-    }),
-    new THREE.MeshBasicMaterial({
-      map: bottomTexture,
-    }),
-    new THREE.MeshBasicMaterial({
-      map: frontTexture,
-    }),
-    new THREE.MeshBasicMaterial({
-      map: backTexture,
-    }),
-  ];
-
-  //작은 픽셀 사이즈 작업할때 선명하게 보이게 하기 위함
-  rightTexture.magFilter = THREE.NearestFilter;
-  leftTexture.magFilter = THREE.NearestFilter;
-  topTextrue.magFilter = THREE.NearestFilter;
-  bottomTexture.magFilter = THREE.NearestFilter;
-  backTexture.magFilter = THREE.NearestFilter;
-  frontTexture.magFilter = THREE.NearestFilter;
+  const gradientTexture = textureLoader.load("/textures/gradient.png");
+  gradientTexture.magFilter = THREE.NearestFilter;
 
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -92,9 +59,12 @@ export default function main() {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(2, 2, 2);
-
-  const mesh = new THREE.Mesh(geometry, materials);
+  const geometry = new THREE.ConeGeometry(1, 2, 128);
+  const material = new THREE.MeshToonMaterial({
+    color: "plum",
+    gradientMap: gradientTexture,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
   //AxesHelper
