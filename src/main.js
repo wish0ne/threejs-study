@@ -1,5 +1,7 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+//특정 방향의 광선(Ray)에 맞은 Mesh 판별하기
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -21,8 +23,9 @@ export default function main() {
   );
 
   //camera 위치 설정
-  camera.position.y = 1;
-  camera.position.z = 5;
+  camera.position.x = 5;
+  camera.position.y = 1.5;
+  camera.position.z = 4;
 
   //scene에 camera 추가
   scene.add(camera);
@@ -36,17 +39,29 @@ export default function main() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
-  //mesh(geometry + material) 생성
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
-  });
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  //Controls
+  const controls = new OrbitControls(camera, renderer.domElement);
 
-  //AxesHelper
-  const axesHelper = new THREE.AxesHelper(5);
-  scene.add(axesHelper);
+  //Mesh
+  const lineMaterial = new THREE.LineBasicMaterial({ color: "yellow" });
+  const points = [];
+  points.push(new THREE.Vector3(0, 0, 100));
+  points.push(new THREE.Vector3(0, 0, -100));
+  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+  const guide = new THREE.Line(lineGeometry, lineMaterial);
+  scene.add(guide);
+
+  const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+  const boxMaterial = new THREE.MeshStandardMaterial({ color: "plum" });
+  const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+
+  const torusGeometry = new THREE.TorusGeometry(2, 0.5, 16, 100);
+  const torusMaterial = new THREE.MeshStandardMaterial({ color: "lime" });
+  const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
+
+  scene.add(boxMesh, torusMesh);
+
+  const meshes = [boxMesh, torusMesh];
 
   //animation
   const clock = new THREE.Clock();
