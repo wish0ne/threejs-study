@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import dat from "dat.gui";
 
-// Light 기본
+// Light 애니메이션
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -77,7 +77,11 @@ export default function main() {
   //animation
   const clock = new THREE.Clock();
   function draw() {
-    const delta = clock.getDelta();
+    //const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
+
+    light.position.x = Math.cos(time) * 5;
+    light.position.z = Math.sin(time) * 5;
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
