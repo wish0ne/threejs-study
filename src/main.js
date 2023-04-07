@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import dat from "dat.gui";
 
-// Light 애니메이션
+// Light와 Shadow
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -11,6 +11,11 @@ export default function main() {
   });
   renderer.setSize(window.innerWidth, window.innerHeight); //renderer 크기 지정
   renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1); //고해상도 표현
+  //그림자 설정
+  renderer.shadowMap.enabled = true;
+  //renderer.shadowMap.type = THREE.PCFShadowMap; //기본값
+  //renderer.shadowMap.type = THREE.BasicShadowMap;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   //scene 생성
   const scene = new THREE.Scene();
@@ -41,6 +46,15 @@ export default function main() {
   const lightHelper = new THREE.DirectionalLightHelper(light);
   scene.add(lightHelper);
 
+  //그림자 설정
+  light.castShadow = true; //그림자를 만들 수 있는 빛
+  //그림자 해상도
+  light.shadow.mapSize.width = 1024; //기본값 512
+  light.shadow.mapSize.height = 1024;
+  light.shadow.camera.near = 1;
+  light.shadow.camera.far = 10;
+  //light.shadow.radius = 5; //기본값인 THREE.PCFShadowMap에서만 적용
+
   //Controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -62,6 +76,13 @@ export default function main() {
   plane.rotation.x = Math.PI * -0.5;
   box.position.set(1, 1, 0);
   sphere.position.set(-1, 1, 0);
+
+  //그림자 설정
+  plane.receiveShadow = true;
+  box.castShadow = true;
+  box.receiveShadow = true;
+  sphere.castShadow = true;
+  sphere.receiveShadow = true;
   scene.add(plane, box, sphere);
 
   //AxesHelper
@@ -79,9 +100,6 @@ export default function main() {
   function draw() {
     //const delta = clock.getDelta();
     const time = clock.getElapsedTime();
-
-    light.position.x = Math.cos(time) * 5;
-    light.position.z = Math.sin(time) * 5;
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
