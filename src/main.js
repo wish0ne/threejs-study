@@ -1,8 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { RectAreaLightHelper } from "three/examples/jsm/helpers/RectAreaLightHelper";
 import dat from "dat.gui";
 
-// HemisphereLight
+// RectAreaLight
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -39,12 +40,13 @@ export default function main() {
   // const ambientLight = new THREE.AmbientLight("white", 0.5);
   // scene.add(ambientLight);
 
-  const light = new THREE.HemisphereLight("pink", "lime", 1);
-  light.position.x = -5;
-  light.position.y = 3;
+  const light = new THREE.RectAreaLight("orange", 10, 2, 2);
+  //light.position.x = -5;
+  light.position.y = 2;
+  light.position.z = 2;
   scene.add(light);
 
-  const lightHelper = new THREE.HemisphereLightHelper(light);
+  const lightHelper = new RectAreaLightHelper(light);
   scene.add(lightHelper);
 
   //그림자 설정
