@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import dat from "dat.gui";
 
-// SpotLight
+// HemisphereLight
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -36,24 +36,24 @@ export default function main() {
   scene.add(camera);
 
   //light 추가
-  const ambientLight = new THREE.AmbientLight("white", 0.5);
-  scene.add(ambientLight);
+  // const ambientLight = new THREE.AmbientLight("white", 0.5);
+  // scene.add(ambientLight);
 
-  const light = new THREE.SpotLight("white", 1, 30, Math.PI / 6);
+  const light = new THREE.HemisphereLight("pink", "lime", 1);
   light.position.x = -5;
   light.position.y = 3;
   scene.add(light);
 
-  const lightHelper = new THREE.SpotLightHelper(light);
+  const lightHelper = new THREE.HemisphereLightHelper(light);
   scene.add(lightHelper);
 
   //그림자 설정
-  light.castShadow = true; //그림자를 만들 수 있는 빛
+  //light.castShadow = true; //그림자를 만들 수 있는 빛
   //그림자 해상도
-  light.shadow.mapSize.width = 1024; //기본값 512
-  light.shadow.mapSize.height = 1024;
-  light.shadow.camera.near = 1;
-  light.shadow.camera.far = 10;
+  // light.shadow.mapSize.width = 1024; //기본값 512
+  // light.shadow.mapSize.height = 1024;
+  // light.shadow.camera.near = 1;
+  // light.shadow.camera.far = 10;
   //light.shadow.radius = 5; //기본값인 THREE.PCFShadowMap에서만 적용
 
   //Controls
@@ -66,8 +66,8 @@ export default function main() {
 
   //Material
   const material1 = new THREE.MeshStandardMaterial({ color: "white" });
-  const material2 = new THREE.MeshStandardMaterial({ color: "royalblue" });
-  const material3 = new THREE.MeshStandardMaterial({ color: "gold" });
+  const material2 = new THREE.MeshStandardMaterial({ color: "white" });
+  const material3 = new THREE.MeshStandardMaterial({ color: "white" });
 
   //Mesh
   const plane = new THREE.Mesh(planeGeometry, material1);
