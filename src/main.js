@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import dat from "dat.gui";
 
-// Light와 Shadow
+// PointLight
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -39,11 +39,11 @@ export default function main() {
   const ambientLight = new THREE.AmbientLight("white", 0.5);
   scene.add(ambientLight);
 
-  const light = new THREE.DirectionalLight("white", 0.5);
+  const light = new THREE.PointLight("white", 1, 100, 2);
   light.position.y = 3;
   scene.add(light);
 
-  const lightHelper = new THREE.DirectionalLightHelper(light);
+  const lightHelper = new THREE.PointLightHelper(light);
   scene.add(lightHelper);
 
   //그림자 설정
@@ -100,6 +100,9 @@ export default function main() {
   function draw() {
     //const delta = clock.getDelta();
     const time = clock.getElapsedTime();
+
+    light.position.x = Math.cos(time) * 5;
+    light.position.z = Math.sin(time) * 5;
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
