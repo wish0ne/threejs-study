@@ -54,19 +54,41 @@ export default function main() {
   const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: "plum" });
   const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+  boxMesh.name = "box";
 
   const torusGeometry = new THREE.TorusGeometry(2, 0.5, 16, 100);
   const torusMaterial = new THREE.MeshStandardMaterial({ color: "lime" });
   const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
+  torusMesh.name = "torus";
 
   scene.add(boxMesh, torusMesh);
 
   const meshes = [boxMesh, torusMesh];
 
+  const raycaster = new THREE.Raycaster();
+
   //animation
   const clock = new THREE.Clock();
   function draw() {
-    const delta = clock.getDelta();
+    //const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
+    boxMesh.position.y = Math.sin(time) * 2;
+    torusMesh.position.y = Math.cos(time) * 2;
+    boxMesh.material.color.set("plum");
+    torusMesh.material.color.set("lime");
+
+    //광선 시작점
+    const origin = new THREE.Vector3(0, 0, 100);
+    //const direction = new THREE.Vector3(0, 0, -1); //정규화된 방향
+    const direction = new THREE.Vector3(0, 0, -100);
+    direction.normalize();
+    raycaster.set(origin, direction);
+
+    const intersects = raycaster.intersectObjects(meshes);
+    intersects.forEach((item) => {
+      //console.log(item.object.name);
+      item.object.material.color.set("red");
+    });
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
