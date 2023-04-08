@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-//특정 방향의 광선(Ray)에 맞은 Mesh 판별하기
+// 클릭한 Mesh 선택하기
 export default function main() {
   const canvas = document.querySelector("#three-canvas");
   const renderer = new THREE.WebGLRenderer({
@@ -43,14 +43,6 @@ export default function main() {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   //Mesh
-  const lineMaterial = new THREE.LineBasicMaterial({ color: "yellow" });
-  const points = [];
-  points.push(new THREE.Vector3(0, 0, 100));
-  points.push(new THREE.Vector3(0, 0, -100));
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-  const guide = new THREE.Line(lineGeometry, lineMaterial);
-  scene.add(guide);
-
   const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: "plum" });
   const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -66,6 +58,8 @@ export default function main() {
   const meshes = [boxMesh, torusMesh];
 
   const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  console.log(mouse);
 
   //animation
   const clock = new THREE.Clock();
@@ -77,21 +71,19 @@ export default function main() {
     boxMesh.material.color.set("plum");
     torusMesh.material.color.set("lime");
 
-    //광선 시작점
-    const origin = new THREE.Vector3(0, 0, 100);
-    //const direction = new THREE.Vector3(0, 0, -1); //정규화된 방향
-    const direction = new THREE.Vector3(0, 0, -100);
-    direction.normalize();
-    raycaster.set(origin, direction);
-
-    const intersects = raycaster.intersectObjects(meshes);
-    intersects.forEach((item) => {
-      //console.log(item.object.name);
-      item.object.material.color.set("red");
-    });
-
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
+  }
+
+  function checkIntersects() {
+    raycaster.setFromCamera(mouse, camera); //카메라 시점에서 마우스 클릭 좌표로 광선
+
+    const intersects = raycaster.intersectObjects(meshes);
+    for (let item of intersects) {
+      console.log(item.object.name);
+      break; //처음 맞은 item만
+    }
+    //if (intersects[0]) console.log(intersects[0].object.name);
   }
 
   //이벤트
@@ -102,8 +94,17 @@ export default function main() {
     renderer.setSize(window.innerWidth, window.innerHeight); //renderer 크기 지정
     renderer.render(scene, camera);
   }
+  //Event
   //window resize event 발생
   window.addEventListener("resize", setSize);
+
+  //마우스 클릭 좌표를 three.js 좌표로 변환
+  canvas.addEventListener("click", (e) => {
+    mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
+    mouse.y = -((e.clientY / canvas.clientHeight) * 2 - 1);
+    //console.log(mouse);
+    checkIntersects();
+  });
 
   draw();
 }
